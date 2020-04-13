@@ -1,5 +1,7 @@
 # Resume built using RMarkdown and the pagedown package - modified Nick Strayer's version
 
+To make this version more suitable for non-coder researchers
+
 Modified with page number inserted, adjusted page margin --> modified .css files
 
 Printed to PDF directly via pagedown::chrome_print --> modified .rmd files
