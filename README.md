@@ -1,4 +1,4 @@
-# Resume built using RMarkdown and the pagedown package - modified Nick Strayer's version
+# CV built using RMarkdown and the pagedown package - modified Nick Strayer's version
 
 To make this version more suitable for non-coder researchers
 
