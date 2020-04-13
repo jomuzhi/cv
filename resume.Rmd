@@ -1,0 +1,186 @@
+---
+title: "Muzhi's Resume"
+author: Nick Strayer
+date: "`r Sys.Date()`"
+output:
+  pagedown::html_resume:
+    # include custom CSS file via the css option
+    css: ['css/custom_resume.css', 'css/styles.css', 'resume']
+    # set it to true for a self-contained HTML page but it'll take longer to render
+    self_contained: false
+    
+knit: pagedown::chrome_print
+---
+
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+  results='asis', 
+  echo = FALSE
+)
+library(tidyverse)
+library(glue)
+#devtools::install_github('yihui/knitr')
+
+# ======================================================================
+# These variables determine how the the data is loaded and how the exports are
+# done.
+
+# Is data stored in google sheets? If no data will be gather from the csvs/
+# folder in project
+using_googlesheets <- FALSE
+
+# Just the copied URL from the sheet
+positions_sheet_loc <- "https://docs.google.com/spreadsheets/d/14MQICF2F8-vf8CKPF1m4lyGKO6_thG-4aSwat1e2TWc"
+
+# Is this sheet available for anyone to read? If you're using a private sheet
+# set this to false and go to gather_data.R and run the data loading manually
+# once to cache authentication
+sheet_is_publicly_readable <- TRUE
+
+# Is the goal of this knit to build a document that is exported to PDF? If so
+# set this to true to have links turned into footnotes at the end of the
+# document
+PDF_EXPORT <- FALSE
+
+
+# A global (gasp) variable that holds all the links that were inserted for
+# placement at the end
+links <- c()
+
+# ======================================================================
+# Now we source two external scripts. One contains functions for building the
+# text output and the other loads up our data from either googlesheets or csvs
+
+# Functions for building sections from CSV data
+source('parsing_functions.R') 
+
+# Load data for CV/Resume
+source('gather_data.R')
+
+# Now we just need to filter down the position data to include less verbose
+# categories and only the entries we have designated for the resume
+position_data <- position_data %>% 
+  filter(in_resume) %>% 
+  mutate(
+    # Build some custom sections by collapsing others
+    section = case_when(
+      section %in% c('research_positions', 'industry_positions') ~ 'positions', 
+      section %in% c('academic_articles', 'by_me_press') ~ 'writings',
+      TRUE ~ section
+    )
+  ) 
+```
+
+
+
+Aside
+================================================================================
+
+
+![logo](circle-cropped.png){width=50%}
+
+Contact {#contact}
+--------------------------------------------------------------------------------
+
+```{r}
+contact_info %>% 
+  glue_data("- <i class='fa fa-{icon}'></i> {contact}")
+```
+
+
+Teaching and Supervisory {#open-source}
+--------------------------------------------------------
+
+Life Course Research
+
+Methods in Social Research: Quantitative Data Analysis
+
+Sex, Gender, and Sexuality
+
+Master Thesis Supervisory, Student Tutor
+
+
+Software Skills {#skills}
+-------------------------------------------------------------
+
+```{r}
+# skills <- tribble(
+#   ~skill,               ~level,
+#   "Stata",              5,
+#   "R",                  4,
+#   "RMarkdown",          4
+# )
+#
+# build_skill_bars(skills)
+```
+
+Stata, R, RMarkdown, LEM for log-linear models, Mplus
+
+
+<!-- Open Source Contributions {#open-source} -->
+<!-- -------------------------------------------------------------------------------- -->
+
+<!-- All projects available at `github.com/nstrayer/<name>` -->
+
+
+<!-- - `shinysense`: R package to use sensor data in Shiny apps -->
+<!-- - `tuftesque`: Hugo theme (behind LiveFreeOrDichotomize.com) -->
+<!-- - `sbmR`: R package for fitting stochasitic block models -->
+
+
+More info {#more-info}
+--------------------------------------------------------------------------------
+
+See full CV attached for more complete list of positions, publications, and grants.
+
+
+Disclaimer {#disclaimer}
+--------------------------------------------------------------------------------
+
+
+Made w/ [**pagedown**](https://github.com/rstudio/pagedown).
+
+Source code: [github.com/jomuzhi/cv](https://github.com/jomuzhi/cv).
+
+Last updated on `r Sys.Date()`.
+
+
+
+Main
+================================================================================
+
+Muzhi ZHOU {#title}
+--------------------------------------------------------------------------------
+
+```{r}
+print_text_block(text_blocks, 'intro')
+```
+
+
+
+Selected Education {data-icon=graduation-cap data-concise=true}
+--------------------------------------------------------------------------------
+
+```{r}
+position_data %>% print_section('education')
+```
+
+
+
+Selected Positions {data-icon=suitcase}
+--------------------------------------------------------------------------------
+
+```{r}
+position_data %>% print_section('positions')
+```
+
+
+
+Selected Academic Journal Articles {data-icon=book}
+--------------------------------------------------------------------------------
+
+```{r}
+position_data %>% print_section('writings')
+```
+
