@@ -1,0 +1,253 @@
+---
+title: "Muzhi's CV"
+author: Nick Strayer
+date: "`r Sys.Date()`"
+output:
+  pagedown::html_resume:
+    css: ['css/styles.css', 'resume']
+    # set it to true for a self-contained HTML page but it'll take longer to render
+    self_contained: false
+    
+knit: pagedown::chrome_print
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+  results='asis', 
+  echo = FALSE
+)
+
+library(glue)
+library(tidyverse)
+
+# ======================================================================
+# These variables determine how the the data is loaded and how the exports are
+# done.
+
+# Is data stored in google sheets? If no data will be gather from the csvs/
+# folder in project
+using_googlesheets <- FALSE
+
+# Just the copied URL from the sheet
+positions_sheet_loc <- "https://docs.google.com/spreadsheets/d/14MQICF2F8-vf8CKPF1m4lyGKO6_thG-4aSwat1e2TWc"
+
+# Is this sheet available for anyone to read? If you're using a private sheet
+# set this to false and go to gather_data.R and run the data loading manually
+# once to cache authentication
+sheet_is_publicly_readable <- TRUE
+
+# Is the goal of this knit to build a document that is exported to PDF? If so
+# set this to true to have links turned into footnotes at the end of the
+# document
+PDF_EXPORT <- FALSE
+
+
+ #CV_PDF_LOC <- "https://github.com/nstrayer/cv/raw/master/strayer_cv.pdf"
+ #CV_HTML_LOC <- "nickstrayer.me/cv/"
+
+
+# A global (gasp) variable that holds all the links that were inserted for
+# placement at the end
+links <- c()
+
+# ======================================================================
+# Now we source two external scripts. One contains functions for building the
+# text output and the other loads up our data from either googlesheets or csvs
+
+# Functions for building sections from CSV data
+source('parsing_functions.R') 
+
+# Load data for CV/Resume
+source('gather_data.R')
+```
+
+
+
+```{r}
+# When in export mode the little dots are unaligned, so fix that. 
+if(PDF_EXPORT){
+  cat("
+  <style>
+  :root{
+    --decorator-outer-offset-left: -6.5px;
+  }
+  </style>")
+}
+
+position_data <- position_data %>% 
+  mutate(
+    # Build some custom sections by collapsing others
+    section = case_when(
+      section %in% c('books_translated', 'by_me_press') ~ 'writings',
+      TRUE ~ section
+    )
+  ) 
+```
+
+Aside
+================================================================================
+
+
+![logo](circle-cropped.png){width=50%}
+
+```{r}
+# When in export mode the little dots are unaligned, so fix that. 
+# if(PDF_EXPORT){
+#   glue("View this CV online with links at _{CV_HTML_LOC}_")
+# } else {
+#   glue("[<i class='fas fa-download'></i> Download a PDF of this CV]({CV_PDF_LOC})")
+# }
+```
+
+Contact {#contact}
+--------------------------------------------------------------------------------
+
+```{r}
+contact_info %>% 
+  glue_data("- <i class='fa fa-{icon}'></i> {contact}")
+```
+
+
+
+Software Skills {#skills}
+--------------------------------------------------------------------------------
+
+```{r}
+# build_skill_bars(skills)
+```
+
+Stata, R, RMarkdown, LEM for log-linear models, Mplus
+
+
+Main
+================================================================================
+
+Muzhi Zhou {#title}
+--------------------------------------------------------------------------------
+
+```{r}
+print_text_block(text_blocks, 'intro')
+```
+
+
+
+Education {data-icon=graduation-cap data-concise=true}
+--------------------------------------------------------------------------------
+
+```{r}
+print_section(position_data, 'education')
+```
+
+
+
+Research Experience {data-icon=laptop}
+--------------------------------------------------------------------------------
+::: aside
+```{r}
+print_text_block(text_blocks, 'project_aside')
+```
+:::
+
+```{r}
+print_section(position_data, 'research_positions')
+```
+
+
+<!-- These breaks just force a new page so section doesnt get cut off -->
+<br>
+
+
+Othere Professional Experience {data-icon=suitcase}
+--------------------------------------------------------------------------------
+
+::: aside
+```{r}
+print_text_block(text_blocks, 'industy_experience_aside')
+```
+:::
+
+
+```{r}
+print_section(position_data, 'industry_positions')
+```
+
+
+Teaching Experience {data-icon=chalkboard-teacher}
+--------------------------------------------------------------------------------
+
+::: aside
+```{r}
+print_text_block(text_blocks, 'teaching_experience_aside')
+```
+:::
+
+```{r}
+print_section(position_data, 'teaching_positions')
+```
+
+
+Academic Journal Articles {data-icon=book}
+--------------------------------------------------------------------------------
+
+```{r}
+print_section(position_data, 'academic_articles')
+```
+
+Selected Talks {data-icon=comments}
+--------------------------------------------------------------------------------
+
+```{r}
+print_section(position_data, 'conference')
+```
+
+
+Selected Press Articles {data-icon=newspaper}
+--------------------------------------------------------------------------------
+::: aside
+```{r}
+print_text_block(text_blocks, 'press_writing_aside')
+```
+:::
+
+```{r}
+print_section(position_data, 'writings')
+```
+
+
+
+Recent Funding, Awards, and Scholarships {data-icon=trophy}
+--------------------------------------------------------------------------------
+
+```{r}
+print_section(position_data, 'awards')
+```
+
+
+```{r}
+if(PDF_EXPORT){
+  cat("
+  
+Links {data-icon=link}
+--------------------------------------------------------------------------------
+
+<br>
+
+
+")
+  
+  walk2(links, 1:length(links), function(link, index){
+    print(glue('{index}. {link}'))
+  })
+}
+```
+
+
+Disclaimer {#disclaimer}
+--------------------------------------------------------------------------------
+
+Made with the R package [**pagedown**](https://github.com/rstudio/pagedown).
+
+<!-- The source code is available at [github.com/jomuzhi/cv](https://github.com/jomuzhi/cv). -->
+
+Last updated on `r Sys.Date()`.
+

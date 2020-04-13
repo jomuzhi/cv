@@ -9,6 +9,7 @@ output:
     # set it to true for a self-contained HTML page but it'll take longer to render
     self_contained: false
     
+    #Print into pdf through Chrome
 knit: pagedown::chrome_print
 ---
 
@@ -91,19 +92,20 @@ contact_info %>%
 
 Teaching and Supervisory {#open-source}
 --------------------------------------------------------
-
+<br>
 Life Course Research
 
 Methods in Social Research: Quantitative Data Analysis
 
 Sex, Gender, and Sexuality
 
-Master Thesis Supervisory, Student Tutor
+Master Thesis Supervisory
 
 
 Software Skills {#skills}
 -------------------------------------------------------------
-
+<br>
+Stata, R, RMarkdown, LEM for log-linear models, Mplus
 ```{r}
 # skills <- tribble(
 #   ~skill,               ~level,
@@ -115,7 +117,6 @@ Software Skills {#skills}
 # build_skill_bars(skills)
 ```
 
-Stata, R, RMarkdown, LEM for log-linear models, Mplus
 
 
 <!-- Open Source Contributions {#open-source} -->
@@ -131,7 +132,7 @@ Stata, R, RMarkdown, LEM for log-linear models, Mplus
 
 More info {#more-info}
 --------------------------------------------------------------------------------
-
+<br>
 See full CV attached for more complete list of positions, publications, and grants.
 
 
