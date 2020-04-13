@@ -1,4 +1,4 @@
-# CV built using RMarkdown and the pagedown package
+# Resume built using RMarkdown and the pagedown package - modified Nick Strayer's version
 
 Modified with page number inserted, adjusted margin for CV --> modified .css files
 
